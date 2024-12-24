@@ -6,9 +6,9 @@ import {
   getOneStudent,
   deleteStudent,
   updateStudent
-} from "../controllers/studentControllers.js";
+} from "../controllers/studentController.js";
 
-import { authenticate } from "../middlewares/aunthenticate.js";
+import { authenticate } from "../middlewares/authenticate.js";
  
 const router = express.Router();
 //CRUD OPERATIONS

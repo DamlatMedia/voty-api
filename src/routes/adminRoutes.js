@@ -1,5 +1,5 @@
 import express from "express";
-import { authenticate } from "../middlewares/aunthenticate.js";
+import { authenticate } from "../middlewares/authenticate.js";
 
 import {
   adminReg,
@@ -10,14 +10,14 @@ import {
   deleteAdmins,
   updateAdmin
 
-} from "../controllers/adminControllers.js";
+} from "../controllers/adminController.js";
 
 import {
   getStudents,
   getOneStudent,
   deleteStudent,
   deleteStudents,
-} from "../controllers/studentControllers.js";
+} from "../controllers/studentController.js";
 
 const router = express.Router();
 //CRUD OPERATIONS
