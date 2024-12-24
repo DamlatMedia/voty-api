@@ -1,4 +1,0 @@
-#ignore some folder and file while pushing to the gitHub repository
-
-node_modules/
-.env
