@@ -15,7 +15,7 @@ const studentReg = async (req, res) => {
       .status(400)
       .json({ status: "error", message: error.details[0].message });
   }
-  const { username, email, password } = req.body;
+  const { username, email, password, school, grade, address, gender, birth, number} = req.body;
 
   try {
     //find out if the student is already registered using email
@@ -43,7 +43,7 @@ const studentReg = async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, salt);
 
       // Create a new student
-      student = new Student({ username, email, password: hashedPassword });
+      student = new Student({ username, email, password: hashedPassword, school, grade, address, gender, birth, number });
       await student.save();
 
       res.status(201).json({
