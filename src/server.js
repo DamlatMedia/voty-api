@@ -23,12 +23,31 @@ const app = express();
 const { PORT, NODE_ENV } = process.env
 
 // ✅ Configure CORS properly 
+// app.use(
+//     cors({
+//       origin: "http://localhost:3000", // Allow frontend URL
+//       credentials: true, // Allow cookies and authentication headers
+//     })
+//   );
+
+const allowedOrigins = [
+  "http://localhost:3000",           // for local development
+  "https://voty-app.vercel.app",      // for deployed frontend
+];
+
 app.use(
-    cors({
-      origin: "http://localhost:3000", // Allow frontend URL
-      credentials: true, // Allow cookies and authentication headers
-    })
-  );
+  cors({
+      origin: function (origin, callback) {
+          if (!origin || allowedOrigins.includes(origin)) {
+              callback(null, true);
+          } else {
+              callback(new Error("Not allowed by CORS"));
+          }
+      },
+      credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(helmet()); 
 app.use(bodyParser.json());
