@@ -22,7 +22,7 @@ const app = express();
 // 2. destructure and call our environment variables from .env
 const { PORT, NODE_ENV } = process.env
 
-// ✅ Configure CORS properly
+// ✅ Configure CORS properly 
 app.use(
     cors({
       origin: "http://localhost:3000", // Allow frontend URL
