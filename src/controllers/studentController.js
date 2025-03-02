@@ -15,7 +15,7 @@ const studentReg = async (req, res) => {
       .status(400)
       .json({ status: "error", message: error.details[0].message });
   }
-  const { username, email, password, school, grade, address, gender, birth, number} = req.body;
+  const { username, email, password, school, grade, address, gender, birth, number } = req.body;
 
   try {
     //find out if the student is already registered using email
@@ -37,37 +37,30 @@ const studentReg = async (req, res) => {
         });
       }
 
-<<<<<<< HEAD
-          // Compute age
-    const today = new Date();
-    const birthDate = new Date(birth);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    let ageCategory = "unknown";
-    if (age >= 5 && age <= 10) {
-      ageCategory = "5-10";
-    } else if (age >= 11 && age <= 20) {
-      ageCategory = "11-20";
-    } else {
-      return res.status(400).json({ message: "Student age is out of allowed range" });
-    }
+      // Compute age
+      const today = new Date();
+      const birthDate = new Date(birth);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      let ageCategory = "unknown";
+      if (age >= 5 && age <= 10) {
+        ageCategory = "5-10";
+      } else if (age >= 11 && age <= 20) {
+        ageCategory = "11-20";
+      } else {
+        return res.status(400).json({ message: "Student age is out of allowed range" });
+      }
 
-=======
->>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
       //create student and save details to database
       // Hash the password
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
       // Create a new student
-<<<<<<< HEAD
       student = new Student({ username, email, password: hashedPassword, school, grade, address, gender, birth, number, ageCategory });
-=======
-      student = new Student({ username, email, password: hashedPassword, school, grade, address, gender, birth, number });
->>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
       await student.save();
 
       res.status(201).json({
