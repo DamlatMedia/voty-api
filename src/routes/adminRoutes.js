@@ -1,11 +1,10 @@
 import express from "express";
-<<<<<<< HEAD
 import  authMiddleware  from "../middleware/authMiddleware.js";
-import {upload} from "../middleware/uploadMiddleware.js";
-=======
-import { authenticate } from "../middlewares/authenticate.js";
 
->>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
+import upload from "../middleware/multer.js";
+// import {upload} from "../middleware/uploadMiddleware.js";
+
+import uploadToCloudinary from "../controllers/uploadController.js";
 import {
   adminReg,
   adminLogin,
@@ -13,16 +12,9 @@ import {
   getOneAdmin,
   deleteAdmin,
   deleteAdmins,
-<<<<<<< HEAD
   updateAdmin, 
 
 } from "../controllers/adminController.js";
-=======
-  updateAdmin
-
-} from "../controllers/adminController.js";
-
->>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
 import {
   getStudents,
   getOneStudent,
@@ -30,15 +22,12 @@ import {
   deleteStudents,
 } from "../controllers/studentController.js";
 
-<<<<<<< HEAD
 import {
-  uploadVideo,
+  // uploadVideo,
   getVideos,
   markAsWatched,
 } from "../controllers/videoController.js";
 
-=======
->>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
 const router = express.Router();
 //CRUD OPERATIONS
 
@@ -51,7 +40,6 @@ router.post("/login", adminLogin);
 
 //GET-READ
 // Define route to get all admins 
-<<<<<<< HEAD
 router.route("/all-admins").get(authMiddleware, getAdmins);
 
 // Define route to get an admin by id
@@ -70,31 +58,10 @@ router.route("/delete-admins").delete(authMiddleware, deleteAdmins);
 //UPDATE
 // Define route to update an admin by ID, protected by authentication
 router.route("/update-admin/:id").patch(authMiddleware, updateAdmin);
-=======
-router.route("/all-admins").get(authenticate, getAdmins);
-
-// Define route to get an admin by id
-router.route("/one-admin/:id").get(authenticate, getOneAdmin); 
-
-// Define route to get an admin by email, or username using query parameters
-router.route("/one-admin").get(authenticate, getOneAdmin);
-
-//GET-READ
-// Define route to delete an admin by id
-router.route("/delete-admin/:id").delete(authenticate, deleteAdmin);
-
-// Define route to delete admins
-router.route("/delete-admins").delete(authenticate, deleteAdmins);
-
-//UPDATE
-// Define route to update an admin by ID, protected by authentication
-router.route("/update-admin/:id").patch(authenticate, updateAdmin);
->>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
 
 /////////////////////////////////////////////////////////
 //GET
 // Define route to get all students 
-<<<<<<< HEAD
 router.route("/all-students").get(authMiddleware, getStudents);
 
 // Define route to get an student by id
@@ -112,24 +79,20 @@ router.route("/delete-student/:id").delete(authMiddleware, deleteStudent);
 
 
 //Videos
-router.post("/upload", authMiddleware, upload.single("video"), uploadVideo);
+// router.post("/upload", authMiddleware, upload.single("video"), uploadVideo);
 router.get("/", getVideos);
 
-=======
-router.route("/all-students").get(authenticate, getStudents);
+// Upload Video
+router.post("/upload", upload.single("video"), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: "No file uploaded." });
 
-// Define route to get an student by id
-router.route("/one-student/:id").get(authenticate, getOneStudent); 
+    const result = await uploadToCloudinary(req.file.buffer, "voty_videos", "video");
+    res.json({ message: "Video uploaded successfully", url: result.secure_url });
+  } catch (error) {
+    res.status(500).json({ message: "Upload failed", error: error.message });
+  }
+});
 
-// Define route to get an student by email, or username using query parameters
-router.route("/one-student").get(authenticate, getOneStudent);
-
-//DELETE
-// Define route to delete students
-router.route("/delete-students").delete(authenticate, deleteStudents);
-
-// Define route to delete an student by id
-router.route("/delete-student/:id").delete(authenticate, deleteStudent);
->>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
 
 export default router;

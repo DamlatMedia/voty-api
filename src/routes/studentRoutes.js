@@ -9,7 +9,7 @@ import {
 } from "../controllers/studentController.js";
 
 import {
-  uploadVideo,
+  // uploadVideo,
   getVideos,
   markAsWatched,
 } from "../controllers/videoController.js";
