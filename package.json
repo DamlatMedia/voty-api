@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "voties",
   "version": "1.0.0",
   "description": "",
@@ -31,10 +32,42 @@
     "nodemailer": "^6.10.0",
     "path": "^0.12.7",
     "uuid": "^11.1.0",
+=======
+  "name": "voty-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "fs": "^0.0.1-security",
+    "helmet": "^8.0.0",
+    "http-status": "^2.0.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.12.0",
+    "mongoose": "^8.9.2",
+    "multer": "^1.4.5-lts.1",
+>>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "colors": "^1.4.0",
+<<<<<<< HEAD
+=======
+    "eslint": "^9.17.0",
+>>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
     "morgan": "^1.10.0",
     "nodemon": "^3.1.9"
   }

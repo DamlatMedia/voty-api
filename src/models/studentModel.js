@@ -20,7 +20,11 @@ const studentUserSchema = new mongoose.Schema(
       trim: true,
       match: [/^\S+@\S+\.\S+$/, "Please provide a valid email address"],
     },
+<<<<<<< HEAD
     number: { 
+=======
+    number: {
+>>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
       type: String,
       required: true,
       unique: true, 
@@ -57,12 +61,15 @@ const studentUserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+<<<<<<< HEAD
     ageCategory: { 
       type: String, 
       required: true, 
       enum: ["5-10", "11-20", "unknown"] 
     },
     score: { type: Number, default: 0 }
+=======
+>>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
   },
   { timestamps: true }
 );

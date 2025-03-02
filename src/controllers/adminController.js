@@ -72,19 +72,32 @@ const adminReg = async (req, res) => {
     });
   }
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
 const adminLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+<<<<<<< HEAD
     // Checking if the admin exists
     let adminExists = await Admin.findOne({ email });
 
     if (!adminExists) {
       return res.status(404).json({
+=======
+    //checking if the admin exists
+    let adminExists = await Admin.findOne({ email });
+
+    if (!adminExists) {
+      res.status(404).json({
+>>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
         message: responseMessages.invalidCredentials,
       });
     }
 
+<<<<<<< HEAD
     // Checking if the password is correct
     const confirmedPassword = await bcrypt.compare(password, adminExists.password);
 
@@ -92,6 +105,19 @@ const adminLogin = async (req, res) => {
       return res.status(401).json({
         message: responseMessages.invalidCredentials,
       });
+=======
+    //checking if password is correct
+    const confirmedPassword = await bcrypt.compare(
+      password,
+      adminExists.password
+    );
+
+    if (!confirmedPassword) {
+      res.status(401).json({
+        message: responseMessages.invalidCredentials,
+      });
+      return;
+>>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
     }
 
     // Generate a JWT token
@@ -101,13 +127,18 @@ const adminLogin = async (req, res) => {
       { expiresIn: "15m" } // Token expiration time
     );
 
+<<<<<<< HEAD
     // Send success message if credentials are correct
+=======
+    //send success message if credentials are correct
+>>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
     res.status(200).json({
       message: responseMessages.loginSuccess,
       adminData: adminExists,
       authToken: token,
     });
   } catch (error) {
+<<<<<<< HEAD
     console.error("Login error:", error);
     res.status(500).json({ message: "An error occurred while processing your request." });
   }
@@ -157,6 +188,12 @@ const adminLogin = async (req, res) => {
 //   }
 // };
 
+=======
+    console.error(error);
+  }
+};
+
+>>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
 //admin controller function to get all admins
 const getAdmins = async (req, res) => {
   try {

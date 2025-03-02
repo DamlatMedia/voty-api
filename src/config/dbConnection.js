@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import mongoose from "mongoose";
 // import dotenv from "dotenv";
 
@@ -18,6 +19,8 @@
 
 // export default connectDB;
 
+=======
+>>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
 import mongoose from "mongoose";
 
 // connecting to database

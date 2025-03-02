@@ -37,6 +37,7 @@ const studentReg = async (req, res) => {
         });
       }
 
+<<<<<<< HEAD
           // Compute age
     const today = new Date();
     const birthDate = new Date(birth);
@@ -54,13 +55,19 @@ const studentReg = async (req, res) => {
       return res.status(400).json({ message: "Student age is out of allowed range" });
     }
 
+=======
+>>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
       //create student and save details to database
       // Hash the password
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
       // Create a new student
+<<<<<<< HEAD
       student = new Student({ username, email, password: hashedPassword, school, grade, address, gender, birth, number, ageCategory });
+=======
+      student = new Student({ username, email, password: hashedPassword, school, grade, address, gender, birth, number });
+>>>>>>> 909abeffd3e03f4a8a57a7be4944a2dffd62d1ab
       await student.save();
 
       res.status(201).json({
