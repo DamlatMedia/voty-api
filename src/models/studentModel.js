@@ -20,10 +20,10 @@ const studentUserSchema = new mongoose.Schema(
       trim: true,
       match: [/^\S+@\S+\.\S+$/, "Please provide a valid email address"],
     },
-    number: { 
+    number: {
       type: String,
       required: true,
-      unique: true, 
+      unique: true,
       trim: true,
       match: [/^\+?\d{10,15}$/, "Please provide a valid phone number"],
     },
@@ -33,6 +33,12 @@ const studentUserSchema = new mongoose.Schema(
       minlength: 8,
       maxlength: 70,
     },
+    isVerified: { type: Boolean, default: false },
+    profilePicture: { type: String, required: false },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    verificationToken: String,
+    verificationTokenExpiresAt: Date,
     birth: {
       type: Date,
       required: true,
@@ -57,12 +63,22 @@ const studentUserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    ageCategory: { 
-      type: String, 
-      required: true, 
-      enum: ["5-10", "11-20", "unknown"] 
+    ageCategory: {
+      type: String,
+      required: true,
+      enum: ["5-10", "11-20", "unknown"]
     },
-    score: { type: Number, default: 0 }
+    score: { type: Number, default: 0 },
+    profilePicture: { type: String, default: "" },
+    notificationInvestments: [
+      {
+        update: String,
+        title: String,
+        description: String,
+        read: { type: Boolean, default: false },  // ✅ Add this
+        date: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -72,4 +88,4 @@ const Student = mongoose.model('Student', studentUserSchema);
 
 // Export the user model
 export default Student;
-   
+

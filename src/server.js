@@ -10,6 +10,7 @@ import colors from "colors";
 import videoRoutes from "./routes/videoRoutes.js";
 import triviaRoutes from "./routes/triviaRoutes.js";
 import Adminrouter from "./routes/adminRoutes.js";
+import Notificationrouter from "./routes/notificationRoutes.js";
 import Studentrouter from "./routes/studentRoutes.js";
 import leaderboardRoutes from "./routes/leaderboardRoutes.js";
 import { dbConnection } from "./config/dbConnection.js";
@@ -80,6 +81,8 @@ app.use("/api/trivia", triviaRoutes);
 app.use("/api/leaderboard", leaderboardRoutes);
 app.use("/student", Studentrouter);
 app.use("/admin", Adminrouter);
+
+app.use("/api", Notificationrouter);
 
   
 //connecting to the database

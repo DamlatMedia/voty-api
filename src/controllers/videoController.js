@@ -41,6 +41,7 @@ import Video from "../models/videoModel.js";
 
 
 export const getVideos = async (req, res) => {
+  res.set('Cache-Control', 'no-store'); // Add this to prevent caching
   try {
     const videos = await Video.find();
     res.status(200).json(videos);

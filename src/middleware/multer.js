@@ -8,4 +8,9 @@ const upload = multer({
   limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
 }); 
 
+export const uploadProfilePic = multer({ 
+  storage, 
+  limits: { fileSize: 5 * 1024 * 1024 } // Limit file size to 5MB
+});
+
 export default upload;
