@@ -33,6 +33,7 @@ const { PORT, NODE_ENV } = process.env
 
 const allowedOrigins = [
   "http://localhost:3000",           // for local development
+  "http://localhost:3001",           // for local development
   "https://voty-app.vercel.app",      // for deployed frontend
 ];
 
@@ -48,6 +49,15 @@ app.use(
       credentials: true,
   })
 );
+
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "script-src 'self' https://checkout.paystack.com 'unsafe-inline';"
+  );
+  next();
+});
+
 
 app.use(express.json());
 app.use(helmet()); 

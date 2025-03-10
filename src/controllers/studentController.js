@@ -80,9 +80,11 @@ const studentReg = async (req, res) => {
       const verificationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
 
       // Create a new student
-      student = new Student({ username, email, password: hashedPassword, school, grade, address, gender, birth, number, ageCategory, 
+      student = new Student({
+        username, email, password: hashedPassword, school, grade, address, gender, birth, number, ageCategory,
         verificationToken,            // Save the token here
-        verificationTokenExpiresAt, });
+        verificationTokenExpiresAt,
+      });
       await student.save();
 
       await sendVerificationEmail(student.email, verificationToken);
@@ -134,7 +136,7 @@ const studentLogin = async (req, res) => {
     const token = jwt.sign(
       { id: studentExists._id, email: studentExists.email },
       process.env.JWT_SECRET,
-      { expiresIn: "15m" } // Token expiration time
+      { expiresIn: "1D" } // Token expiration time
     );
 
     //send success message if credentials are correct
@@ -150,6 +152,68 @@ const studentLogin = async (req, res) => {
     });
   }
 };
+
+const updateStudentPayment = async (req, res) => {
+  try {
+    // Expecting the client to send { isPaid: true } in the body
+    const { isPaid } = req.body;
+    const { username } = req.params; // Username in URL
+
+    console.log("updatePaymentStatus called");
+    console.log("Received username:", username);
+    console.log("Received body:", req.body);
+    // Ensure the authenticated student is updating their own payment status
+    // if (!req.user || !req.user.username) {
+    //   return res.status(401).json({ message: "Unauthorized. User not authenticated." });
+    // }
+    // if (req.user.username !== username) {
+    //   return res.status(403).json({ message: "Unauthorized" });
+    // }
+    // Update the student's payment flag
+    const updatedStudent = await Student.findOneAndUpdate(
+      { username },
+      // { $set: { isPaid: isPaid } },
+
+      { $set: { isPaid } },
+      { new: true }
+    );
+    if (!updatedStudent) {
+      console.error("Student not found for username:", username);
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    console.log("Student updated:", updatedStudent);
+    res.status(200).json({
+      message: "Payment status updated successfully",
+      updatedData: updatedStudent,
+    });
+  } catch (error) {
+    console.error("Error updating payment status:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+const verifyStudentPayment = async (req, res) => {
+  const { reference } = req.body;
+
+  try {
+    const response = await axios.get(`https://api.paystack.co/transaction/verify/${reference}`, {
+      headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET}` }
+    });
+
+    if (response.data.status === "success") {
+      // Update user payment status in the database
+      await User.findOneAndUpdate({ email: req.user.email }, { isPaid: true });
+      return res.json({ success: true, message: "Payment verified!" });
+    } else {
+      return res.status(400).json({ success: false, message: "Payment verification failed!" });
+    }
+  } catch (error) {
+    console.error("Error verifying payment:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
 
 const verifyEmail = async (req, res) => {
   const { email, verificationToken } = req.body;
@@ -225,7 +289,7 @@ const requestPasswordReset = async (req, res) => {
     console.log("Reset token stored in DB:", user.passwordResetToken);
 
     // Send password reset email
-    const resetLink = `https://www.gvestinvestmentcapital.com/reset-password?token=${resetToken}&email=${email}`;
+    const resetLink = `http://localhost:8000/reset-password?token=${resetToken}&email=${email}`;
     // const resetLink = `http://localhost:3000/reset-password?token=${resetToken}&email=${email}`;
     await sendPasswordResetEmail(user.email, resetLink);
 
@@ -351,63 +415,17 @@ const getStudents = async (req, res) => {
 };
 
 //student controller function to get one student using id, email or username
-// const getOneStudent = async (req, res) => {
+// const getOneStudents = async (req, res) => {
 //   try {
-//     const { id } = req.params; // Extract id from path parameters
-//     const { email, username } = req.query; // Extract email and username from query parameters
-
-//     // Validate input: At least one of id, email, or username must be provided
-//     if (!id && !email && !username) {
-//       return res.status(400).json({
-//         message:
-//           "At least one of id, email, or username is required to perform this query.",
-//       });
-//     }
-
-//     // Build a dynamic filter object
-//     const filter = {};
-//     if (id) filter._id = id;
-//     if (email) filter.email = email;
-//     if (username) filter.username = username;
-
-//     // Query the database using the filter
-//     const student = await Student.findOne(filter);
-
-//     // If student not found, return 404
-//     if (!student) {
-//       return res.status(404).json({
-//         message: "Student not found.",
-//       });
-//     }
-
-//     // Return found student data
-//     res.status(200).json({
-//       message: "Student found successfully.",
-//       studentData: student,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({
-//       message: "Server Error",
-//     });
-//   }
-// };
-
-// const getOneStudent = async (req, res) => { 
-//   try {
-//     if (!req.user) {
+//     const { id } = req.params; // Now using id from URL
+//     const user = await Student.findById(id);
+//     if (!user) {
 //       return res.status(404).json({ status: "error", message: "User not found" });
 //     }
-//     res.status(200).json({
-//       status: "success",
-//       data: req.user,
-//     });
+//     res.status(200).json({ status: "success", data: user });
 //   } catch (error) {
 //     console.error("Error fetching profile:", error);
-//     res.status(500).json({
-//       status: "error",
-//       message: "Failed to fetch profile data.",
-//     });
+//     res.status(500).json({ status: "error", message: "Failed to fetch profile data." });
 //   }
 // };
 
@@ -540,7 +558,8 @@ const updateStudent = async (req, res) => {
 export const updateStudentProfile = async (req, res) => {
   try {
     const { number, address, school, grade } = req.body;
-    const usernameParam = req.params.username; // Get username from URL
+    // const usernameParam = req.params; // Get username from URL
+    const { username } = req.params; 
 
     // Ensure the authenticated student is updating their own profile using username
     if (!req.user) {
@@ -559,7 +578,8 @@ export const updateStudentProfile = async (req, res) => {
 
     // Update using username as unique identifier
     const updatedStudent = await Student.findOneAndUpdate(
-      { username: usernameParam },
+      // { username: usernameParam },
+      { username},
       { $set: updateData },
       { new: true }
     );
@@ -577,6 +597,53 @@ export const updateStudentProfile = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+export const updateStudentProfilePicture = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded or empty file" });
+    }
+
+    // Upload the image to Cloudinary (adjust folder name and resource_type as needed)
+    cloudinary.uploader.upload_stream(
+      { folder: "student_profiles", resource_type: "image" },
+      async (error, result) => {
+        if (error) {
+          console.error("Cloudinary upload error:", error);
+          return res.status(500).json({ message: "Cloudinary upload failed" });
+        }
+
+
+        console.log("Cloudinary Upload Result:", result); // Debugging log
+
+        const { username } = req.params; 
+        const usernameParam = req.params.username;
+
+        // Use username instead of _id for updating
+        const updatedStudent = await Student.findOneAndUpdate(
+          // { username: req.user.username },
+          { username},
+          
+          { $set: { profilePicture: result.secure_url } },
+          { new: true }
+        );
+
+        console.log("Updated Student:", updatedStudent); // Debugging log
+        if (!updatedStudent) {
+          return res.status(404).json({ message: "Student not found" });
+        }
+        res.status(200).json({
+          message: "Profile picture updated successfully",
+          profilePicture: result.secure_url,
+        });
+      }
+    ).end(req.file.buffer);
+  } catch (error) {
+    console.error("Error updating profile picture:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 
 // export const updateStudentProfilePicture = async (req, res) => {
 //   try {
@@ -615,44 +682,12 @@ export const updateStudentProfile = async (req, res) => {
 // };
 
 
-export const updateStudentProfilePicture = async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded or empty file" });
-    }
 
-    // Upload the image to Cloudinary (adjust folder name and resource_type as needed)
-    cloudinary.uploader.upload_stream(
-      { folder: "student_profiles", resource_type: "image" },
-      async (error, result) => {
-        if (error) {
-          console.error("Cloudinary upload error:", error);
-          return res.status(500).json({ message: "Cloudinary upload failed" });
-        }
-
-        // const usernameParam = req.params.username;
-
-        // Use username instead of _id for updating
-        const updatedStudent = await Student.findOneAndUpdate(
-          { username: req.user.username },
-          // { username: usernameParam },
-          { $set: { profilePicture: result.secure_url } },
-          { new: true }
-        );
-
-        res.status(200).json({
-          message: "Profile picture updated successfully",
-          profilePicture: result.secure_url,
-        });
-      }
-    ).end(req.file.buffer);
-  } catch (error) {
-    console.error("Error updating profile picture:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
 
 export {
+  // getOneStudents,
+  verifyStudentPayment,
+  updateStudentPayment,
   studentReg,
   studentLogin,
   getStudents,

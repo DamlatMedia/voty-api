@@ -68,6 +68,8 @@ const studentUserSchema = new mongoose.Schema(
       required: true,
       enum: ["5-10", "11-20", "unknown"]
     },
+
+    isPaid: { type: Boolean, default: false },
     score: { type: Number, default: 0 },
     profilePicture: { type: String, default: "" },
     notificationInvestments: [

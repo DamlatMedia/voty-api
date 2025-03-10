@@ -98,7 +98,7 @@ const adminLogin = async (req, res) => {
     const token = jwt.sign(
       { id: adminExists._id, email: adminExists.email },
       process.env.JWT_SECRET,
-      { expiresIn: "15m" } // Token expiration time
+      { expiresIn: "1D" } // Token expiration time
     );
 
     // Send success message if credentials are correct

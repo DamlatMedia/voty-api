@@ -7,7 +7,7 @@ import {
 } from "../controllers/triviaController.js";
 import studentMiddleware from "../middleware/studentMiddleware.js";
 
-import upload from "../middleware/multer.js";
+import {upload} from "../middleware/multer.js";
 import authMiddleware from "../middleware/authMiddleware.js"; // for admin routes (bulk upload)
 // import {uploadTrivia} from "../middleware/uploadMiddleware.js"; // Middleware for file uploads
 

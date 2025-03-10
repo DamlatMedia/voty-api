@@ -1,7 +1,7 @@
 import express from "express";
 // import {upload} from "../middleware/uploadMiddleware.js";
 
-import upload from "../middleware/multer.js";
+import {upload} from "../middleware/multer.js";
 import uploadToCloudinary from "../controllers/uploadController.js";
 import {
   // uploadVideo,

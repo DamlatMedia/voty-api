@@ -1,7 +1,7 @@
 import express from "express";
 import  authMiddleware  from "../middleware/authMiddleware.js";
 
-import upload from "../middleware/multer.js";
+import {upload} from "../middleware/multer.js";
 // import {upload} from "../middleware/uploadMiddleware.js";
 
 import uploadToCloudinary from "../controllers/uploadController.js";
