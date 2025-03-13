@@ -35,6 +35,7 @@ const allowedOrigins = [
   "http://localhost:3000",           // for local development
   "http://localhost:3001",           // for local development
   "https://voty-app.vercel.app",      // for deployed frontend
+  "https://voty.ng",      // for deployed frontend
 ];
 
 app.use(
