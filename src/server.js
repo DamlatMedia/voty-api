@@ -23,55 +23,33 @@ const app = express();
 // 2. destructure and call our environment variables from .env
 const { PORT, NODE_ENV } = process.env
 
-// ✅ Configure CORS properly 
-// app.use(
-//     cors({
-//       origin: "http://localhost:3000", // Allow frontend URL
-//       credentials: true, // Allow cookies and authentication headers
-//     })
-//   );
 
 const allowedOrigins = [
-  "http://localhost:3000",           // for local development
-  "http://localhost:3001",           // for local development
-  "https://voty-app.vercel.app",      // for deployed frontend
+  "http://localhost:3000",          
+  "http://localhost:3001",           
+  "https://voty-app.vercel.app",      
   "https://voty.ng",
-  "https://www.voty.ng"      // for deployed frontend
+  "https://www.voty.ng"    
 ];
+
 
 // app.use(
 //   cors({
-//       origin: function (origin, callback) {
-//           if (!origin || allowedOrigins.includes(origin)) {
-//               callback(null, true);
-//           } else {
-//               callback(new Error("Not allowed by CORS"));
-//           }
-//       },
-//       credentials: true,
+//     origin: allowedOrigins,
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//     allowedHeaders: ["Origin", "Content-Type", "Accept", "Authorization"],
 //   })
 // );
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: "*",  // Temporarily allow all origins
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Origin", "Content-Type", "Accept", "Authorization"],
   })
 );
-
-
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-//   res.header("Access-Control-Allow-Credentials", "true");
-//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//   res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization");
-//   if (req.method === "OPTIONS") {
-//     return res.sendStatus(200);
-//   }
-//   next();
-// });
 
 
 app.use((req, res, next) => {
