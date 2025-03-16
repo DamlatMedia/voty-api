@@ -39,18 +39,28 @@ const allowedOrigins = [
   "https://www.voty.ng"      // for deployed frontend
 ];
 
+// app.use(
+//   cors({
+//       origin: function (origin, callback) {
+//           if (!origin || allowedOrigins.includes(origin)) {
+//               callback(null, true);
+//           } else {
+//               callback(new Error("Not allowed by CORS"));
+//           }
+//       },
+//       credentials: true,
+//   })
+// );
+
 app.use(
   cors({
-      origin: function (origin, callback) {
-          if (!origin || allowedOrigins.includes(origin)) {
-              callback(null, true);
-          } else {
-              callback(new Error("Not allowed by CORS"));
-          }
-      },
-      credentials: true,
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Origin", "Content-Type", "Accept", "Authorization"],
   })
 );
+
 
 // app.use((req, res, next) => {
 //   res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
