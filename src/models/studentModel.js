@@ -23,7 +23,7 @@ const studentUserSchema = new mongoose.Schema(
     number: {
       type: String,
       required: true,
-      unique: true,
+      // unique: true,
       trim: true,
       match: [/^\+?\d{10,15}$/, "Please provide a valid phone number"],
     },

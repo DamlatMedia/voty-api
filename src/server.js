@@ -32,21 +32,11 @@ const allowedOrigins = [
   "https://www.voty.ng"    
 ];
 
-
-// app.use(
-//   cors({
-//     origin: allowedOrigins,
-//     credentials: true,
-//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//     allowedHeaders: ["Origin", "Content-Type", "Accept", "Authorization"],
-//   })
-// );
-
 app.use(
   cors({
     origin: "*",  // Temporarily allow all origins
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Origin", "Content-Type", "Accept", "Authorization"],
   })
 );
@@ -95,6 +85,7 @@ app.use("/student", Studentrouter);
 app.use("/admin", Adminrouter);
 
 app.use("/api", Notificationrouter);
+
 
   
 //connecting to the database

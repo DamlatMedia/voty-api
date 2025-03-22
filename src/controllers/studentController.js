@@ -9,6 +9,8 @@ import studentValidateSchema from "../utils/studentValidateSchema.js";
 import { response } from "express";
 import cloudinary from "../middleware/uploadMiddleware.js";
 import crypto from "crypto";
+import axios from "axios";
+
 
 import {
   sendPasswordResetEmail,
@@ -193,26 +195,78 @@ const updateStudentPayment = async (req, res) => {
   }
 };
 
+
+
 const verifyStudentPayment = async (req, res) => {
   const { reference } = req.body;
 
   try {
+    console.log("Received reference:", reference); // Debugging
+
     const response = await axios.get(`https://api.paystack.co/transaction/verify/${reference}`, {
       headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET}` }
     });
 
-    if (response.data.status === "success") {
-      // Update user payment status in the database
-      await User.findOneAndUpdate({ email: req.user.email }, { isPaid: true });
+    console.log("Paystack response:", response.data); // Debugging
+
+    if (response.data.status === true && response.data.data.status === "success") {
+      const customerEmail = response.data.data.customer.email;
+
+      if (!customerEmail) {
+        return res.status(400).json({ success: false, message: "Customer email not found in Paystack response!" });
+      }
+
+      // Update the user's payment status in the database
+      await Student.findOneAndUpdate({ email: customerEmail }, { isPaid: true });
+
       return res.json({ success: true, message: "Payment verified!" });
     } else {
       return res.status(400).json({ success: false, message: "Payment verification failed!" });
     }
   } catch (error) {
-    console.error("Error verifying payment:", error);
-    return res.status(500).json({ success: false, message: "Internal server error" });
+    console.error("Error verifying payment:", error.response?.data || error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.response?.data || error.message,
+    });
   }
 };
+
+// const verifyStudentPayment = async (req, res) => {
+//   const { reference } = req.body;
+
+//   try {
+//     console.log("Received reference:", reference); // Debugging
+
+//     const response = await axios.get(`https://api.paystack.co/transaction/verify/${reference}`, {
+//       headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET}` }
+//     });
+
+//     console.log("Paystack response:", response.data); // Debugging
+//     console.log("Paystack Secret:", process.env.PAYSTACK_SECRET);
+
+//     // Ensure the response status is true and transaction is successful
+//     if (response.data.status === true && response.data.data.status === "success") {
+//       // Update user payment status in the database
+//       await Student.findOneAndUpdate({ email: req.user.email }, { isPaid: true });
+
+//       return res.json({ success: true, message: "Payment verified!" });
+//     } else {
+//       return res.status(400).json({ success: false, message: "Payment verification failed!" });
+//     }
+//   } catch (error) {
+//     console.error("Error verifying payment:", error.response?.data || error.message);
+
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//       error: error.response?.data || error.message,
+//     });
+//   }
+// };
+
 
 
 const verifyEmail = async (req, res) => {
@@ -414,21 +468,6 @@ const getStudents = async (req, res) => {
   }
 };
 
-//student controller function to get one student using id, email or username
-// const getOneStudents = async (req, res) => {
-//   try {
-//     const { id } = req.params; // Now using id from URL
-//     const user = await Student.findById(id);
-//     if (!user) {
-//       return res.status(404).json({ status: "error", message: "User not found" });
-//     }
-//     res.status(200).json({ status: "success", data: user });
-//   } catch (error) {
-//     console.error("Error fetching profile:", error);
-//     res.status(500).json({ status: "error", message: "Failed to fetch profile data." });
-//   }
-// };
-
 const getOneStudent = async (req, res) => {
   try {
     const { username } = req.params; // Extract username from URL
@@ -559,7 +598,7 @@ export const updateStudentProfile = async (req, res) => {
   try {
     const { number, address, school, grade } = req.body;
     // const usernameParam = req.params; // Get username from URL
-    const { username } = req.params; 
+    const { username } = req.params;
 
     // Ensure the authenticated student is updating their own profile using username
     if (!req.user) {
@@ -579,7 +618,7 @@ export const updateStudentProfile = async (req, res) => {
     // Update using username as unique identifier
     const updatedStudent = await Student.findOneAndUpdate(
       // { username: usernameParam },
-      { username},
+      { username },
       { $set: updateData },
       { new: true }
     );
@@ -616,14 +655,14 @@ export const updateStudentProfilePicture = async (req, res) => {
 
         console.log("Cloudinary Upload Result:", result); // Debugging log
 
-        const { username } = req.params; 
+        const { username } = req.params;
         const usernameParam = req.params.username;
 
         // Use username instead of _id for updating
         const updatedStudent = await Student.findOneAndUpdate(
           // { username: req.user.username },
-          { username},
-          
+          { username },
+
           { $set: { profilePicture: result.secure_url } },
           { new: true }
         );
@@ -643,45 +682,6 @@ export const updateStudentProfilePicture = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
-
-// export const updateStudentProfilePicture = async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res
-//         .status(400)
-//         .json({ message: "No file uploaded or empty file" });
-//     }
-
-//     // Upload the image to Cloudinary (adjust folder name and resource_type as needed)
-//     cloudinary.uploader.upload_stream(
-//       { folder: "student_profiles", resource_type: "image" },
-//       async (error, result) => {
-//         if (error) {
-//           console.error("Cloudinary upload error:", error);
-//           return res.status(500).json({ message: "Cloudinary upload failed" });
-//         }
-
-//         const studentId = req.user._id;
-//         const updatedStudent = await Student.findByIdAndUpdate(
-//           studentId,
-//           { $set: { profilePicture: result.secure_url } },
-//           { new: true }
-//         );
-
-//         res.status(200).json({
-//           message: "Profile picture updated successfully",
-//           profilePicture: result.secure_url,
-//         });
-//       }
-//     ).end(req.file.buffer);
-//   } catch (error) {
-//     console.error("Error updating profile picture:", error);
-//     res.status(500).json({ message: "Server error", error: error.message });
-//   }
-// };
-
-
 
 
 export {
