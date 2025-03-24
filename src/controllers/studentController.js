@@ -10,6 +10,7 @@ import { response } from "express";
 import cloudinary from "../middleware/uploadMiddleware.js";
 import crypto from "crypto";
 import axios from "axios";
+import dotenv from "dotenv";
 
 
 import {
@@ -21,6 +22,7 @@ import {
 // import upload from "../middleware/multer.js";
 // import uploadToCloudinary from "../controllers/uploadController.js";
 
+dotenv.config();
 
 const studentReg = async (req, res) => {
   const { error } = studentValidateSchema(registerSchema, req.body);
@@ -341,7 +343,7 @@ const requestPasswordReset = async (req, res) => {
     console.log("Reset token stored in DB:", user.passwordResetToken);
 
     // Send password reset email
-    const resetLink = `http://localhost:8000/reset-password?token=${resetToken}&email=${email}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${email}`;
     // const resetLink = `http://localhost:3000/reset-password?token=${resetToken}&email=${email}`;
     await sendPasswordResetEmail(user.email, resetLink);
 
