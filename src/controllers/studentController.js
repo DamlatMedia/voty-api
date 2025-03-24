@@ -195,8 +195,6 @@ const updateStudentPayment = async (req, res) => {
   }
 };
 
-
-
 const verifyStudentPayment = async (req, res) => {
   const { reference } = req.body;
 
