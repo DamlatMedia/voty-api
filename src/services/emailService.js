@@ -14,9 +14,9 @@ export const sendVerificationEmail = async (email, verificationToken) => {
   );
 
   const mailOptions = {
-    from: '"HostelAlly Support" <no-reply@hostelally.com>',
+    from: '"Voty Support" <no-reply@Voty.com>',
     to: email,
-    subject: "Verify Your Email - HostelAlly",
+    subject: "Verify Your Email - Voty",
     html: emailHtml,
   };
 
@@ -31,9 +31,9 @@ export const sendWelcomeEmail = async (email, firstName, lastName) => {
   
   try {
     const mailOptions = {
-      from: '"HostelAlly Support" <no-reply@hostelally.com>',
+      from: '"Voty Support" <no-reply@Voty.com>',
       to: email,
-      subject: "Welcome Email - HostelAlly",
+      subject: "Welcome Email - Voty",
       html: emailHtml,
     };
     await transporter.sendMail(mailOptions);
@@ -51,9 +51,9 @@ export const sendPasswordResetEmail = async (email, verificationLink) => {
 
   try {
     const mailOptions = {
-      from: '"HostelAlly Support" <no-reply@hostelally.com>',
+      from: '"Voty Support" <no-reply@Voty.com>',
       to: email,
-      subject: "Password Reset - HostelAlly",
+      subject: "Password Reset - Voty",
       html: emailHtml,
     };
     await transporter.sendMail(mailOptions);
@@ -66,9 +66,9 @@ export const sendPasswordResetEmail = async (email, verificationLink) => {
 export const sendResetSuccessEmail = async (email) => {
   try {
     const mailOptions = {
-      from: '"HostelAlly Support" <no-reply@hostelally.com>',
+      from: '"Voty Support" <no-reply@Voty.com>',
       to: email,
-      subject: "Password Reset Successful - HostelAlly",
+      subject: "Password Reset Successful - Voty",
       html: PASSWORD_RESET_SUCCESS_TEMPLATE,
     };
     await transporter.sendMail(mailOptions);

@@ -12,19 +12,19 @@ export const VERIFICATION_EMAIL_TEMPLATE = `
   </div>
   <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
     <p>Hello,</p>
-    <p>Thank you for signing up for HostelAlly! We're thrilled to help you find the best places to stay during your travels.</p>
+    <p>Thank you for signing up for Voty! We're thrilled to help you find the best places to stay during your travels.</p>
     <p>To secure your account, please verify your email address using the code below:</p>
     <div style="text-align: center; margin: 30px 0;">
       <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #4CAF50;">{verificationCode}</span>
     </div>
      <p>This code will expire in 15 minutes for security reasons. Please complete your verification soon!</p>
-      <p>If you didn't sign up for HostelAlly, you can safely ignore this email.</p>
+      <p>If you didn't sign up for Voty, you can safely ignore this email.</p>
    
     
   </div>
   <div class="email-footer">
       <p>Need help? Visit our <a href="" style="color: #ff7b54;">Support Center</a>.</p>
-      <p>&copy; ${new Date().getFullYear()} HostelAlly. All rights reserved.</p>
+      <p>&copy; ${new Date().getFullYear()} Voty. All rights reserved.</p>
     </div>
 </body>
 </html>
@@ -45,9 +45,9 @@ export const EMAIL_VERIFICATION_SUCCESS_TEMPLATE = `
   <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
     <p>Hello, {firstName} {lastName}</p>
     <p>Congratulations! Your email address has been successfully verified. You can now enjoy all the features of our platform.</p>
-    <p>Thank you for choosing HostelAlly. We're excited to have you on board!</p>
+    <p>Thank you for choosing Voty. We're excited to have you on board!</p>
     <p>If you have any questions or need assistance, feel free to reach out to our support team.</p>
-    <p>Best regards,<br>Your HostelAlly Team</p>
+    <p>Best regards,<br>Your Voty Team</p>
   </div>
   <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
     <p>This is an automated message, please do not reply to this email.</p>
