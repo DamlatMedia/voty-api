@@ -7,6 +7,7 @@ import helmet from "helmet";
 import httpStatus from "http-status";
 import bodyParser from "body-parser";
 import colors from "colors";
+import Contactrouter from "./routes/contactRoutes.js";
 import videoRoutes from "./routes/videoRoutes.js";
 import triviaRoutes from "./routes/triviaRoutes.js";
 import Adminrouter from "./routes/adminRoutes.js";
@@ -85,6 +86,7 @@ app.use("/student", Studentrouter);
 app.use("/admin", Adminrouter);
 
 app.use("/api", Notificationrouter);
+app.use("/contact", Contactrouter);
 
 
   

@@ -31,6 +31,7 @@ const createUpload = (fileSizeLimit) =>
 
 export const upload = createUpload(600 * 1024 * 1024); // 600MB limit
 export const uploadProfilePic = createUpload(50 * 1024 * 1024); // 50MB limit
+export const uploadAdminProfilePic = createUpload(50 * 1024 * 1024); // 50MB limit
 
 
 // export default upload;

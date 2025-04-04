@@ -8,6 +8,8 @@ import { registerSchema } from "../validations/adminValidation.js";
 import adminValidateSchema from "../utils/adminValidateSchema.js";
 import { response } from "express";
 
+import cloudinary from "../middleware/uploadMiddleware.js";
+
 const adminReg = async (req, res) => {
   const { error } = adminValidateSchema(registerSchema, req.body);
   if (error) {
@@ -72,6 +74,7 @@ const adminReg = async (req, res) => {
     });
   }
 };
+
 const adminLogin = async (req, res) => {
   const { email, password } = req.body;
 
@@ -158,6 +161,7 @@ const adminLogin = async (req, res) => {
 // };
 
 //admin controller function to get all admins
+
 const getAdmins = async (req, res) => {
   try {
     //find out if all the admin is already registered
@@ -317,6 +321,52 @@ const updateAdmin = async (req, res) => {
       status: "error",
       message: "An unexpected error occurred",
     });
+  }
+};
+
+export const updateAdminProfilePicture = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded or empty file" });
+    }
+
+    // Upload the image to Cloudinary (adjust folder name and resource_type as needed)
+    cloudinary.uploader.upload_stream(
+      { folder: "admin_profiles", resource_type: "image" },
+      async (error, result) => {
+        if (error) {
+          console.error("Cloudinary upload error:", error);
+          return res.status(500).json({ message: "Cloudinary upload failed" });
+        }
+
+
+        console.log("Cloudinary Upload Result:", result); // Debugging log
+
+        const { username } = req.params;
+        const usernameParam = req.params.username;
+
+        // Use username instead of _id for updating
+        const updatedStudent = await Admin.findOneAndUpdate(
+          // { username: req.user.username },
+          { username },
+
+          { $set: { profilePicture: result.secure_url } },
+          { new: true }
+        );
+
+        console.log("Updated Student:", updatedStudent); // Debugging log
+        if (!updatedStudent) {
+          return res.status(404).json({ message: "Student not found" });
+        }
+        res.status(200).json({
+          message: "Profile picture updated successfully",
+          profilePicture: result.secure_url,
+        });
+      }
+    ).end(req.file.buffer);
+  } catch (error) {
+    console.error("Error updating profile picture:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 

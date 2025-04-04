@@ -13,6 +13,7 @@ import {
   deleteAdmin,
   deleteAdmins,
   updateAdmin, 
+  updateAdminProfilePicture
 
 } from "../controllers/adminController.js";
 import {
@@ -28,8 +29,14 @@ import {
   markAsWatched,
 } from "../controllers/videoController.js";
 
+import { uploadAdminProfilePic } from "../middleware/multer.js";
+
 const router = express.Router();
 //CRUD OPERATIONS
+
+// Update profile picture
+router.route("/update-profile-picture/:username").put(authMiddleware, uploadAdminProfilePic.single("profilePicture"), updateAdminProfilePicture);
+
 
 //POST-CREATE
 // Define admin registration route

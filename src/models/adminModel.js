@@ -5,6 +5,7 @@ const adminUser = new mongoose.Schema({
     username: { type: String, required: true, unique: true, minlength:5, maxlength: 10},
     email: { type: String, required: true, unique: true, lowercase: true},
     password: { type: String, required: true, minlength:5, maxlength: 70},
+    profilePicture: { type: String, default: "" },
 }, {timestamps: true})
 
 // Create the admin model based on the schema
